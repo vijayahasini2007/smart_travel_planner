@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TripDetailsScreen extends StatefulWidget {
   const TripDetailsScreen({super.key});
 
   @override
-  State<TripDetailsScreen> createState() =>
-      _TripDetailsScreenState();
+  State<TripDetailsScreen> createState() => _TripDetailsScreenState();
 }
 
 class _TripDetailsScreenState extends State<TripDetailsScreen> {
@@ -14,6 +14,52 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
   final TextEditingController travelersController =
       TextEditingController();
+
+  DateTime? startDate;
+  DateTime? endDate;
+
+  Future<void> selectStartDate() async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2030),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        startDate = pickedDate;
+
+        if (endDate != null && endDate!.isBefore(pickedDate)) {
+          endDate = null;
+        }
+      });
+    }
+  }
+
+  Future<void> selectEndDate() async {
+    if (startDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select the start date first.'),
+        ),
+      );
+      return;
+    }
+
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: startDate!,
+      firstDate: startDate!,
+      lastDate: DateTime(2030),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        endDate = pickedDate;
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -67,9 +113,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
               controller: destinationController,
               decoration: InputDecoration(
                 hintText: 'Enter destination',
-                prefixIcon: const Icon(
-                  Icons.location_on,
-                ),
+                prefixIcon: const Icon(Icons.location_on),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -93,11 +137,93 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 hintText: 'Enter number of travelers',
-                prefixIcon: const Icon(
-                  Icons.people,
-                ),
+                prefixIcon: const Icon(Icons.people),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 22),
+
+            const Text(
+              'Start Date',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            GestureDetector(
+              onTap: selectStartDate,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 17,
+                ),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey.shade500,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.calendar_today),
+                    const SizedBox(width: 12),
+                    Text(
+                      startDate == null
+                          ? 'Select start date'
+                          : DateFormat('dd MMM yyyy')
+                              .format(startDate!),
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 22),
+
+            const Text(
+              'End Date',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            GestureDetector(
+              onTap: selectEndDate,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 17,
+                ),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey.shade500,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.calendar_today),
+                    const SizedBox(width: 12),
+                    Text(
+                      endDate == null
+                          ? 'Select end date'
+                          : DateFormat('dd MMM yyyy')
+                              .format(endDate!),
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ],
                 ),
               ),
             ),
