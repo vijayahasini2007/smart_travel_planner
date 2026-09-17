@@ -23,6 +23,17 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
   String selectedBudget = 'Medium';
 
+  final List<String> preferences = [
+    'Sightseeing',
+    'Food',
+    'Adventure',
+    'Nature',
+    'Shopping',
+    'Culture',
+  ];
+
+  final Set<String> selectedPreferences = {};
+
   Future<void> selectStartDate() async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -105,6 +116,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
             const SizedBox(height: 30),
 
+            // Destination
             const Text(
               'Destination',
               style: TextStyle(
@@ -128,6 +140,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
             const SizedBox(height: 22),
 
+            // Travelers
             const Text(
               'Number of Travelers',
               style: TextStyle(
@@ -152,6 +165,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
             const SizedBox(height: 22),
 
+            // Start Date
             const Text(
               'Start Date',
               style: TextStyle(
@@ -194,6 +208,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
             const SizedBox(height: 22),
 
+            // End Date
             const Text(
               'End Date',
               style: TextStyle(
@@ -236,6 +251,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
             const SizedBox(height: 22),
 
+            // Budget
             const Text(
               'Budget Amount',
               style: TextStyle(
@@ -270,58 +286,106 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
             const SizedBox(height: 10),
 
-            Row(
+            Wrap(
+              spacing: 10,
               children: [
-                Expanded(
-                  child: ChoiceChip(
-                    label: const Text('Low'),
-                    selected: selectedBudget == 'Low',
-                    onSelected: (selected) {
-                      setState(() {
-                        selectedBudget = 'Low';
-                      });
-                    },
-                  ),
+                ChoiceChip(
+                  label: const Text('Low'),
+                  selected: selectedBudget == 'Low',
+                  onSelected: (selected) {
+                    setState(() {
+                      selectedBudget = 'Low';
+                    });
+                  },
                 ),
-
-                const SizedBox(width: 10),
-
-                Expanded(
-                  child: ChoiceChip(
-                    label: const Text('Medium'),
-                    selected: selectedBudget == 'Medium',
-                    onSelected: (selected) {
-                      setState(() {
-                        selectedBudget = 'Medium';
-                      });
-                    },
-                  ),
+                ChoiceChip(
+                  label: const Text('Medium'),
+                  selected: selectedBudget == 'Medium',
+                  onSelected: (selected) {
+                    setState(() {
+                      selectedBudget = 'Medium';
+                    });
+                  },
                 ),
-
-                const SizedBox(width: 10),
-
-                Expanded(
-                  child: ChoiceChip(
-                    label: const Text('High'),
-                    selected: selectedBudget == 'High',
-                    onSelected: (selected) {
-                      setState(() {
-                        selectedBudget = 'High';
-                      });
-                    },
-                  ),
+                ChoiceChip(
+                  label: const Text('High'),
+                  selected: selectedBudget == 'High',
+                  onSelected: (selected) {
+                    setState(() {
+                      selectedBudget = 'High';
+                    });
+                  },
                 ),
               ],
             ),
 
+            const SizedBox(height: 25),
+
+            // Travel Preferences
+            const Text(
+              'Travel Preferences',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            Text(
+              'Select what you are interested in.',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade700,
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: preferences.map((preference) {
+                final bool isSelected =
+                    selectedPreferences.contains(preference);
+
+                return FilterChip(
+                  label: Text(preference),
+                  selected: isSelected,
+                  avatar: Icon(
+                    _getPreferenceIcon(preference),
+                    size: 18,
+                  ),
+                  onSelected: (selected) {
+                    setState(() {
+                      if (selected) {
+                        selectedPreferences.add(preference);
+                      } else {
+                        selectedPreferences.remove(preference);
+                      }
+                    });
+                  },
+                );
+              }).toList(),
+            ),
+
             const SizedBox(height: 30),
 
+            // Continue button
             SizedBox(
               width: double.infinity,
               height: 55,
               child: ElevatedButton(
                 onPressed: () {
                   FocusScope.of(context).unfocus();
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Travel preferences selected!',
+                      ),
+                    ),
+                  );
                 },
                 child: const Text(
                   'Continue',
@@ -336,5 +400,24 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
         ),
       ),
     );
+  }
+
+  IconData _getPreferenceIcon(String preference) {
+    switch (preference) {
+      case 'Sightseeing':
+        return Icons.location_city;
+      case 'Food':
+        return Icons.restaurant;
+      case 'Adventure':
+        return Icons.hiking;
+      case 'Nature':
+        return Icons.forest;
+      case 'Shopping':
+        return Icons.shopping_bag;
+      case 'Culture':
+        return Icons.museum;
+      default:
+        return Icons.star;
+    }
   }
 }
