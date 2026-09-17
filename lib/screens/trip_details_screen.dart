@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 
 import '../models/destination.dart';
 import '../services/itinerary_service.dart';
+import 'itinerary_screen.dart';
 
 class TripDetailsScreen extends StatefulWidget {
   const TripDetailsScreen({super.key});
@@ -57,7 +58,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
       setState(() {
         startDate = pickedDate;
 
-        if (endDate != null && endDate!.isBefore(pickedDate)) {
+        if (endDate != null &&
+            endDate!.isBefore(pickedDate)) {
           endDate = null;
         }
       });
@@ -68,7 +70,9 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
     if (startDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please select the start date first.'),
+          content: Text(
+            'Please select the start date first.',
+          ),
         ),
       );
       return;
@@ -94,7 +98,9 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
     if (destinationController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please enter a destination.'),
+          content: Text(
+            'Please enter a destination.',
+          ),
         ),
       );
       return;
@@ -102,9 +108,13 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
     final destination = Destination(
       name: destinationController.text.trim(),
-      description: 'A wonderful destination to explore.',
+      description:
+          'A wonderful destination to explore.',
       averageCost:
-          double.tryParse(budgetController.text.trim()) ?? 0,
+          double.tryParse(
+                budgetController.text.trim(),
+              ) ??
+              0,
       popularPlaces: [
         'Main Tourist Attraction',
         'Local Market',
@@ -113,12 +123,17 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
     );
 
     final itinerary =
-        ItineraryService.generateItinerary(destination);
+        ItineraryService.generateItinerary(
+      destination,
+    );
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Itinerary generated with ${itinerary.length} activities!',
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ItineraryScreen(
+          destination: destination.name,
+          travelMode: selectedTravelMode,
+          itinerary: itinerary,
         ),
       ),
     );
@@ -141,7 +156,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
           children: [
             const Text(
               'Plan Your Trip',
@@ -178,16 +194,19 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
               controller: destinationController,
               decoration: InputDecoration(
                 hintText: 'Enter destination',
-                prefixIcon: const Icon(Icons.location_on),
+                prefixIcon: const Icon(
+                  Icons.location_on,
+                ),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius:
+                      BorderRadius.circular(12),
                 ),
               ),
             ),
 
             const SizedBox(height: 22),
 
-            // Number of Travelers
+            // Travelers
             const Text(
               'Number of Travelers',
               style: TextStyle(
@@ -200,12 +219,17 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
             TextField(
               controller: travelersController,
-              keyboardType: TextInputType.number,
+              keyboardType:
+                  TextInputType.number,
               decoration: InputDecoration(
-                hintText: 'Enter number of travelers',
-                prefixIcon: const Icon(Icons.people),
+                hintText:
+                    'Enter number of travelers',
+                prefixIcon: const Icon(
+                  Icons.people,
+                ),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius:
+                      BorderRadius.circular(12),
                 ),
               ),
             ),
@@ -227,7 +251,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
               onTap: selectStartDate,
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(
+                padding:
+                    const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 17,
                 ),
@@ -235,18 +260,24 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                   border: Border.all(
                     color: Colors.grey.shade500,
                   ),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius:
+                      BorderRadius.circular(12),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.calendar_today),
+                    const Icon(
+                      Icons.calendar_today,
+                    ),
                     const SizedBox(width: 12),
                     Text(
                       startDate == null
                           ? 'Select start date'
-                          : DateFormat('dd MMM yyyy')
-                              .format(startDate!),
-                      style: const TextStyle(fontSize: 16),
+                          : DateFormat(
+                              'dd MMM yyyy',
+                            ).format(startDate!),
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
                     ),
                   ],
                 ),
@@ -270,7 +301,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
               onTap: selectEndDate,
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(
+                padding:
+                    const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 17,
                 ),
@@ -278,18 +310,24 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                   border: Border.all(
                     color: Colors.grey.shade500,
                   ),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius:
+                      BorderRadius.circular(12),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.calendar_today),
+                    const Icon(
+                      Icons.calendar_today,
+                    ),
                     const SizedBox(width: 12),
                     Text(
                       endDate == null
                           ? 'Select end date'
-                          : DateFormat('dd MMM yyyy')
-                              .format(endDate!),
-                      style: const TextStyle(fontSize: 16),
+                          : DateFormat(
+                              'dd MMM yyyy',
+                            ).format(endDate!),
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
                     ),
                   ],
                 ),
@@ -311,12 +349,16 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
             TextField(
               controller: budgetController,
-              keyboardType: TextInputType.number,
+              keyboardType:
+                  TextInputType.number,
               decoration: InputDecoration(
                 hintText: 'Enter your budget',
-                prefixIcon: const Icon(Icons.currency_rupee),
+                prefixIcon: const Icon(
+                  Icons.currency_rupee,
+                ),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius:
+                      BorderRadius.circular(12),
                 ),
               ),
             ),
@@ -339,7 +381,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
               children: [
                 ChoiceChip(
                   label: const Text('Low'),
-                  selected: selectedBudget == 'Low',
+                  selected:
+                      selectedBudget == 'Low',
                   onSelected: (selected) {
                     setState(() {
                       selectedBudget = 'Low';
@@ -347,8 +390,10 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                   },
                 ),
                 ChoiceChip(
-                  label: const Text('Medium'),
-                  selected: selectedBudget == 'Medium',
+                  label:
+                      const Text('Medium'),
+                  selected:
+                      selectedBudget == 'Medium',
                   onSelected: (selected) {
                     setState(() {
                       selectedBudget = 'Medium';
@@ -356,8 +401,10 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                   },
                 ),
                 ChoiceChip(
-                  label: const Text('High'),
-                  selected: selectedBudget == 'High',
+                  label:
+                      const Text('High'),
+                  selected:
+                      selectedBudget == 'High',
                   onSelected: (selected) {
                     setState(() {
                       selectedBudget = 'High';
@@ -393,23 +440,29 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: preferences.map((preference) {
+              children:
+                  preferences.map((preference) {
                 final bool isSelected =
-                    selectedPreferences.contains(preference);
+                    selectedPreferences
+                        .contains(preference);
 
                 return FilterChip(
                   label: Text(preference),
                   selected: isSelected,
                   avatar: Icon(
-                    _getPreferenceIcon(preference),
+                    _getPreferenceIcon(
+                      preference,
+                    ),
                     size: 18,
                   ),
                   onSelected: (selected) {
                     setState(() {
                       if (selected) {
-                        selectedPreferences.add(preference);
+                        selectedPreferences
+                            .add(preference);
                       } else {
-                        selectedPreferences.remove(preference);
+                        selectedPreferences
+                            .remove(preference);
                       }
                     });
                   },
@@ -441,33 +494,39 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
             const SizedBox(height: 12),
 
             Column(
-              children: travelModes.map((mode) {
+              children:
+                  travelModes.map((mode) {
                 return RadioListTile<String>(
                   value: mode,
-                  groupValue: selectedTravelMode,
+                  groupValue:
+                      selectedTravelMode,
                   title: Text(mode),
                   secondary: Icon(
                     _getTravelModeIcon(mode),
                   ),
                   onChanged: (value) {
                     setState(() {
-                      selectedTravelMode = value!;
+                      selectedTravelMode =
+                          value!;
                     });
                   },
-                  contentPadding: EdgeInsets.zero,
+                  contentPadding:
+                      EdgeInsets.zero,
                 );
               }).toList(),
             ),
 
             const SizedBox(height: 20),
 
-            // Generate Itinerary Button
+            // Generate Itinerary
             SizedBox(
               width: double.infinity,
               height: 55,
               child: ElevatedButton.icon(
                 onPressed: generateItinerary,
-                icon: const Icon(Icons.auto_awesome),
+                icon: const Icon(
+                  Icons.auto_awesome,
+                ),
                 label: const Text(
                   'Generate Itinerary',
                   style: TextStyle(
@@ -485,7 +544,9 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
     );
   }
 
-  IconData _getPreferenceIcon(String preference) {
+  IconData _getPreferenceIcon(
+    String preference,
+  ) {
     switch (preference) {
       case 'Sightseeing':
         return Icons.location_city;
@@ -504,7 +565,9 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
     }
   }
 
-  IconData _getTravelModeIcon(String mode) {
+  IconData _getTravelModeIcon(
+    String mode,
+  ) {
     switch (mode) {
       case 'Flight':
         return Icons.flight;
