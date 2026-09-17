@@ -22,6 +22,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
   DateTime? endDate;
 
   String selectedBudget = 'Medium';
+  String selectedTravelMode = 'Flight';
 
   final List<String> preferences = [
     'Sightseeing',
@@ -33,6 +34,13 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
   ];
 
   final Set<String> selectedPreferences = {};
+
+  final List<String> travelModes = [
+    'Flight',
+    'Train',
+    'Bus',
+    'Car',
+  ];
 
   Future<void> selectStartDate() async {
     final DateTime? pickedDate = await showDatePicker(
@@ -140,7 +148,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
             const SizedBox(height: 22),
 
-            // Travelers
+            // Number of travelers
             const Text(
               'Number of Travelers',
               style: TextStyle(
@@ -165,7 +173,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
             const SizedBox(height: 22),
 
-            // Start Date
+            // Start date
             const Text(
               'Start Date',
               style: TextStyle(
@@ -208,7 +216,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
             const SizedBox(height: 22),
 
-            // End Date
+            // End date
             const Text(
               'End Date',
               style: TextStyle(
@@ -251,7 +259,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
             const SizedBox(height: 22),
 
-            // Budget
+            // Budget amount
             const Text(
               'Budget Amount',
               style: TextStyle(
@@ -276,6 +284,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
             const SizedBox(height: 22),
 
+            // Budget category
             const Text(
               'Budget Category',
               style: TextStyle(
@@ -321,7 +330,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
             const SizedBox(height: 25),
 
-            // Travel Preferences
+            // Travel preferences
             const Text(
               'Travel Preferences',
               style: TextStyle(
@@ -369,7 +378,49 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
               }).toList(),
             ),
 
-            const SizedBox(height: 30),
+            const SizedBox(height: 25),
+
+            // Travel mode
+            const Text(
+              'Travel Mode',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            Text(
+              'Choose how you want to travel.',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade700,
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            Column(
+              children: travelModes.map((mode) {
+                return RadioListTile<String>(
+                  value: mode,
+                  groupValue: selectedTravelMode,
+                  title: Text(mode),
+                  secondary: Icon(
+                    _getTravelModeIcon(mode),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedTravelMode = value!;
+                    });
+                  },
+                  contentPadding: EdgeInsets.zero,
+                );
+              }).toList(),
+            ),
+
+            const SizedBox(height: 20),
 
             // Continue button
             SizedBox(
@@ -380,9 +431,9 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                   FocusScope.of(context).unfocus();
 
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
+                    SnackBar(
                       content: Text(
-                        'Travel preferences selected!',
+                        'Travel mode: $selectedTravelMode',
                       ),
                     ),
                   );
@@ -418,6 +469,21 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
         return Icons.museum;
       default:
         return Icons.star;
+    }
+  }
+
+  IconData _getTravelModeIcon(String mode) {
+    switch (mode) {
+      case 'Flight':
+        return Icons.flight;
+      case 'Train':
+        return Icons.train;
+      case 'Bus':
+        return Icons.directions_bus;
+      case 'Car':
+        return Icons.directions_car;
+      default:
+        return Icons.travel_explore;
     }
   }
 }
