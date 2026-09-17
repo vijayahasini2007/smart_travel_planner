@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../models/destination.dart';
+import '../services/itinerary_service.dart';
+
 class TripDetailsScreen extends StatefulWidget {
   const TripDetailsScreen({super.key});
 
@@ -85,6 +88,42 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
     }
   }
 
+  void generateItinerary() {
+    FocusScope.of(context).unfocus();
+
+    if (destinationController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter a destination.'),
+        ),
+      );
+      return;
+    }
+
+    final destination = Destination(
+      name: destinationController.text.trim(),
+      description: 'A wonderful destination to explore.',
+      averageCost:
+          double.tryParse(budgetController.text.trim()) ?? 0,
+      popularPlaces: [
+        'Main Tourist Attraction',
+        'Local Market',
+        'Famous Landmark',
+      ],
+    );
+
+    final itinerary =
+        ItineraryService.generateItinerary(destination);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Itinerary generated with ${itinerary.length} activities!',
+        ),
+      ),
+    );
+  }
+
   @override
   void dispose() {
     destinationController.dispose();
@@ -148,7 +187,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
             const SizedBox(height: 22),
 
-            // Number of travelers
+            // Number of Travelers
             const Text(
               'Number of Travelers',
               style: TextStyle(
@@ -173,7 +212,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
             const SizedBox(height: 22),
 
-            // Start date
+            // Start Date
             const Text(
               'Start Date',
               style: TextStyle(
@@ -216,7 +255,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
             const SizedBox(height: 22),
 
-            // End date
+            // End Date
             const Text(
               'End Date',
               style: TextStyle(
@@ -259,7 +298,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
             const SizedBox(height: 22),
 
-            // Budget amount
+            // Budget Amount
             const Text(
               'Budget Amount',
               style: TextStyle(
@@ -284,7 +323,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
             const SizedBox(height: 22),
 
-            // Budget category
+            // Budget Category
             const Text(
               'Budget Category',
               style: TextStyle(
@@ -330,7 +369,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
             const SizedBox(height: 25),
 
-            // Travel preferences
+            // Travel Preferences
             const Text(
               'Travel Preferences',
               style: TextStyle(
@@ -380,7 +419,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
             const SizedBox(height: 25),
 
-            // Travel mode
+            // Travel Mode
             const Text(
               'Travel Mode',
               style: TextStyle(
@@ -422,24 +461,15 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
             const SizedBox(height: 20),
 
-            // Continue button
+            // Generate Itinerary Button
             SizedBox(
               width: double.infinity,
               height: 55,
-              child: ElevatedButton(
-                onPressed: () {
-                  FocusScope.of(context).unfocus();
-
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'Travel mode: $selectedTravelMode',
-                      ),
-                    ),
-                  );
-                },
-                child: const Text(
-                  'Continue',
+              child: ElevatedButton.icon(
+                onPressed: generateItinerary,
+                icon: const Icon(Icons.auto_awesome),
+                label: const Text(
+                  'Generate Itinerary',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -447,6 +477,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                 ),
               ),
             ),
+
+            const SizedBox(height: 20),
           ],
         ),
       ),
