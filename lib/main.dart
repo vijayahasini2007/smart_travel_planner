@@ -13,7 +13,11 @@ class SmartTravelPlanner extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Smart Travel Planner',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: const Color(0xFFF5F9FF),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blue,
+        ),
+        useMaterial3: true,
       ),
       home: const HomeScreen(),
     );
@@ -26,16 +30,74 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Smart Travel Planner'),
-      ),
-      body: const Center(
-        child: Text(
-          'Smart Travel Planner\n\nPlan your trip smarter ✈️',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: 130,
+                width: 130,
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade100,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.flight_takeoff,
+                  size: 70,
+                  color: Colors.blue.shade700,
+                ),
+              ),
+
+              const SizedBox(height: 35),
+
+              const Text(
+                'Smart Travel Planner',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              const SizedBox(height: 15),
+
+              Text(
+                'Plan your perfect trip with ease.\n'
+                'Create itineraries, manage your budget,\n'
+                'and enjoy your journey.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey.shade700,
+                  height: 1.5,
+                ),
+              ),
+
+              const SizedBox(height: 40),
+
+              SizedBox(
+                width: double.infinity,
+                height: 55,
+                child: ElevatedButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.explore),
+                  label: const Text(
+                    'Start Planning',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
