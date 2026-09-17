@@ -15,8 +15,13 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
   final TextEditingController travelersController =
       TextEditingController();
 
+  final TextEditingController budgetController =
+      TextEditingController();
+
   DateTime? startDate;
   DateTime? endDate;
+
+  String selectedBudget = 'Medium';
 
   Future<void> selectStartDate() async {
     final DateTime? pickedDate = await showDatePicker(
@@ -65,6 +70,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
   void dispose() {
     destinationController.dispose();
     travelersController.dispose();
+    budgetController.dispose();
     super.dispose();
   }
 
@@ -226,6 +232,86 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                   ],
                 ),
               ),
+            ),
+
+            const SizedBox(height: 22),
+
+            const Text(
+              'Budget Amount',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            TextField(
+              controller: budgetController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                hintText: 'Enter your budget',
+                prefixIcon: const Icon(Icons.currency_rupee),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 22),
+
+            const Text(
+              'Budget Category',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            Row(
+              children: [
+                Expanded(
+                  child: ChoiceChip(
+                    label: const Text('Low'),
+                    selected: selectedBudget == 'Low',
+                    onSelected: (selected) {
+                      setState(() {
+                        selectedBudget = 'Low';
+                      });
+                    },
+                  ),
+                ),
+
+                const SizedBox(width: 10),
+
+                Expanded(
+                  child: ChoiceChip(
+                    label: const Text('Medium'),
+                    selected: selectedBudget == 'Medium',
+                    onSelected: (selected) {
+                      setState(() {
+                        selectedBudget = 'Medium';
+                      });
+                    },
+                  ),
+                ),
+
+                const SizedBox(width: 10),
+
+                Expanded(
+                  child: ChoiceChip(
+                    label: const Text('High'),
+                    selected: selectedBudget == 'High',
+                    onSelected: (selected) {
+                      setState(() {
+                        selectedBudget = 'High';
+                      });
+                    },
+                  ),
+                ),
+              ],
             ),
 
             const SizedBox(height: 30),
