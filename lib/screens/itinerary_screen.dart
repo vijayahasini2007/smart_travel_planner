@@ -38,15 +38,14 @@ class ItineraryScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.all(
-                          isWideScreen ? 28 : 20,
-                        ),
+                        padding: EdgeInsets.all(isWideScreen ? 28 : 20),
                         child: Row(
                           children: [
                             CircleAvatar(
                               radius: isWideScreen ? 32 : 26,
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.primaryContainer,
+                              backgroundColor: Theme.of(context)
+                                  .colorScheme
+                                  .primaryContainer,
                               child: Icon(
                                 Icons.location_on,
                                 size: isWideScreen ? 34 : 28,
@@ -58,8 +57,7 @@ class ItineraryScreen extends StatelessWidget {
                             const SizedBox(width: 16),
                             Expanded(
                               child: Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     destination,
@@ -97,65 +95,23 @@ class ItineraryScreen extends StatelessWidget {
                     const SizedBox(height: 28),
                     Text(
                       'Day-wise Travel Plan',
-                      style: Theme.of(context).textTheme.headlineSmall
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineSmall
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 16),
                     Expanded(
                       child: itinerary.isEmpty
                           ? const Center(
-                              child: Text(
-                                'No itinerary available yet.',
-                                textAlign: TextAlign.center,
-                              ),
+                              child: Text('No itinerary available yet.'),
                             )
                           : ListView.builder(
                               itemCount: itinerary.length,
                               itemBuilder: (context, index) {
-                                return Card(
-                                  margin: const EdgeInsets.only(bottom: 14),
-                                  elevation: 2,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(
-                                      isWideScreen ? 20 : 12,
-                                    ),
-                                    child: ListTile(
-                                      contentPadding: EdgeInsets.zero,
-                                      leading: CircleAvatar(
-                                        radius: 23,
-                                        backgroundColor: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                        child: Text(
-                                          '${index + 1}',
-                                          style: TextStyle(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onPrimary,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      title: Text(
-                                        'Day ${index + 1}',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      subtitle: Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 6),
-                                        child: Text(
-                                          itinerary[index],
-                                          style: const TextStyle(height: 1.4),
-                                        ),
-                                      ),
-                                      isThreeLine: true,
-                                    ),
-                                  ),
+                                return DayItineraryCard(
+                                  dayNumber: index + 1,
+                                  activity: itinerary[index],
                                 );
                               },
                             ),
@@ -166,6 +122,59 @@ class ItineraryScreen extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+// Reusable custom widget for displaying one day's activities.
+class DayItineraryCard extends StatelessWidget {
+  final int dayNumber;
+  final String activity;
+
+  const DayItineraryCard({
+    super.key,
+    required this.dayNumber,
+    required this.activity,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 14),
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: ListTile(
+          contentPadding: EdgeInsets.zero,
+          leading: CircleAvatar(
+            radius: 23,
+            backgroundColor: colorScheme.primary,
+            child: Text(
+              '$dayNumber',
+              style: TextStyle(
+                color: colorScheme.onPrimary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          title: Text(
+            'Day $dayNumber',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top: 6),
+            child: Text(
+              activity,
+              style: const TextStyle(height: 1.4),
+            ),
+          ),
+        ),
       ),
     );
   }
