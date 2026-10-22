@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'screens/trip_details_screen.dart';
 
@@ -21,6 +22,9 @@ class SmartTravelPlanner extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const HomeScreen(),
+      routes: {
+        '/trip-details': (context) => const TripDetailsScreen(),
+      },
     );
   }
 }
@@ -50,9 +54,7 @@ class HomeScreen extends StatelessWidget {
                   color: Colors.blue.shade700,
                 ),
               ),
-
               const SizedBox(height: 35),
-
               const Text(
                 'Smart Travel Planner',
                 textAlign: TextAlign.center,
@@ -61,9 +63,7 @@ class HomeScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-
               const SizedBox(height: 15),
-
               Text(
                 'Plan your perfect trip with ease.\n'
                 'Create itineraries, manage your budget,\n'
@@ -75,21 +75,13 @@ class HomeScreen extends StatelessWidget {
                   height: 1.5,
                 ),
               ),
-
               const SizedBox(height: 40),
-
               SizedBox(
                 width: double.infinity,
                 height: 55,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            const TripDetailsScreen(),
-                      ),
-                    );
+                    Navigator.pushNamed(context, '/trip-details');
                   },
                   icon: const Icon(Icons.explore),
                   label: const Text(
