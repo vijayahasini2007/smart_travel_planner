@@ -1,9 +1,17 @@
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'providers/trip_provider.dart';
 import 'screens/trip_details_screen.dart';
 
 void main() {
-  runApp(const SmartTravelPlanner());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => TripProvider(),
+      child: const SmartTravelPlanner(),
+    ),
+  );
 }
 
 class SmartTravelPlanner extends StatelessWidget {
@@ -109,11 +117,15 @@ class SmartTravelPlanner extends StatelessWidget {
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
-            borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+            borderSide: const BorderSide(
+              color: Color(0xFFCBD5E1),
+            ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
-            borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+            borderSide: const BorderSide(
+              color: Color(0xFFCBD5E1),
+            ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
@@ -128,7 +140,9 @@ class SmartTravelPlanner extends StatelessWidget {
           ),
         ),
       ),
+
       home: const HomeScreen(),
+
       routes: {
         '/trip-details': (context) => const TripDetailsScreen(),
       },
@@ -169,13 +183,17 @@ class HomeScreen extends StatelessWidget {
                       color: colorScheme.primary,
                     ),
                   ),
+
                   const SizedBox(height: 35),
+
                   Text(
                     'Smart Travel Planner',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineLarge,
                   ),
+
                   const SizedBox(height: 15),
+
                   Text(
                     'Plan your perfect trip with ease.\n'
                     'Create itineraries, manage your budget,\n'
@@ -183,12 +201,17 @@ class HomeScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
+
                   const SizedBox(height: 40),
+
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/trip-details');
+                        Navigator.pushNamed(
+                          context,
+                          '/trip-details',
+                        );
                       },
                       icon: const Icon(Icons.explore),
                       label: const Text('Start Planning'),

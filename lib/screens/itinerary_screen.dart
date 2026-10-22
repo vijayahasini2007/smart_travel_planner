@@ -1,4 +1,8 @@
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/trip_provider.dart';
 
 class ItineraryScreen extends StatelessWidget {
   final String destination;
@@ -12,8 +16,8 @@ class ItineraryScreen extends StatelessWidget {
     required this.itinerary,
   });
 
-  IconData _travelModeIcon() {
-    switch (travelMode.toLowerCase()) {
+  IconData _travelModeIconFor(String mode) {
+    switch (mode.toLowerCase()) {
       case 'flight':
         return Icons.flight_takeoff_rounded;
       case 'train':
@@ -29,15 +33,29 @@ class ItineraryScreen extends StatelessWidget {
 
   String _cleanDayText(String item) {
     return item
-        .replaceFirst(RegExp(r'^Day\s+\d+\s*:\s*', caseSensitive: false), '')
+        .replaceFirst(
+          RegExp(r'^Day\s+\d+\s*:\s*', caseSensitive: false),
+          '',
+        )
         .trim();
   }
 
   @override
   Widget build(BuildContext context) {
+    final trip = context.watch<TripProvider>();
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
     final compact = MediaQuery.sizeOf(context).width < 600;
+
+    final tripDestination =
+        trip.destination.isNotEmpty ? trip.destination : destination;
+
+    final tripTravelMode = trip.destination.isNotEmpty
+        ? trip.travelMode
+        : travelMode;
+
+    final tripItinerary =
+        trip.itinerary.isNotEmpty ? trip.itinerary : itinerary;
 
     return Scaffold(
       appBar: AppBar(
@@ -92,7 +110,7 @@ class ItineraryScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 18),
                         Text(
-                          destination,
+                          tripDestination,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: compact ? 28 : 36,
@@ -114,13 +132,13 @@ class ItineraryScreen extends StatelessWidget {
                           runSpacing: 10,
                           children: [
                             _InfoPill(
-                              icon: _travelModeIcon(),
-                              label: travelMode,
+                              icon: _travelModeIconFor(tripTravelMode),
+                              label: tripTravelMode,
                             ),
                             _InfoPill(
                               icon: Icons.calendar_month_rounded,
                               label:
-                                  '${itinerary.length} ${itinerary.length == 1 ? 'day' : 'days'} planned',
+                                  '${tripItinerary.length} ${tripItinerary.length == 1 ? 'day' : 'days'} planned',
                             ),
                           ],
                         ),
@@ -166,15 +184,21 @@ class ItineraryScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  if (itinerary.isEmpty)
+                  if (tripItinerary.isEmpty)
                     const _EmptyItinerary()
                   else
-                    for (var index = 0; index < itinerary.length; index++)
+                    for (
+                      var index = 0;
+                      index < tripItinerary.length;
+                      index++
+                    )
                       Padding(
                         padding: const EdgeInsets.only(bottom: 14),
                         child: _DayPlanCard(
                           dayNumber: index + 1,
-                          description: _cleanDayText(itinerary[index]),
+                          description: _cleanDayText(
+                            tripItinerary[index],
+                          ),
                         ),
                       ),
                   const SizedBox(height: 8),
@@ -189,8 +213,10 @@ class ItineraryScreen extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.lightbulb_outline_rounded,
-                            color: colors.primary),
+                        Icon(
+                          Icons.lightbulb_outline_rounded,
+                          color: colors.primary,
+                        ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
@@ -229,7 +255,10 @@ class _InfoPill extends StatelessWidget {
   final IconData icon;
   final String label;
 
-  const _InfoPill({required this.icon, required this.label});
+  const _InfoPill({
+    required this.icon,
+    required this.label,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -238,7 +267,9 @@ class _InfoPill extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.17),
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.28)),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.28),
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -385,11 +416,18 @@ class _EmptyItinerary extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Icon(Icons.map_outlined, size: 42, color: colors.primary),
+          Icon(
+            Icons.map_outlined,
+            size: 42,
+            color: colors.primary,
+          ),
           const SizedBox(height: 12),
           const Text(
             'No itinerary days yet',
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w700,
+            ),
           ),
           const SizedBox(height: 6),
           const Text(

@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'package:provider/provider.dart';
+import '../providers/trip_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -236,6 +237,19 @@ Future<bool> _isValidDestination(String name) async {
         destination,
         numberOfDays: numberOfDays,
       );
+      context.read<TripProvider>().updateTrip(
+  destination: destinationName,
+  travelMode: selectedTravelMode,
+  numberOfTravelers: int.parse(
+    travelersController.text.trim(),
+  ),
+  budget: budget,
+  budgetCategory: selectedBudget,
+  preferences: selectedPreferences.toList(),
+  startDate: startDate!,
+  endDate: endDate!,
+  itinerary: itinerary,
+);
 
       await Navigator.push(
         context,
