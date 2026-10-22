@@ -1,4 +1,3 @@
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smart_travel_planner/main.dart';
 
@@ -18,8 +17,9 @@ void main() {
     await tester.tap(find.text('Start Planning'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Trip Details'), findsOneWidget);
-    expect(find.text('Destination'), findsOneWidget);
-    expect(find.text('Generate Itinerary'), findsOneWidget);
+    // Expectations matching the redesigned screen
+    expect(find.text('Plan your trip'), findsOneWidget);
+    expect(find.text('Where are you going?'), findsOneWidget);
+    expect(find.text('Generate my itinerary'), findsOneWidget);
   });
-}
+} 
