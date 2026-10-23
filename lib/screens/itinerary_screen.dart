@@ -192,15 +192,30 @@ class ItineraryScreen extends StatelessWidget {
                       index < tripItinerary.length;
                       index++
                     )
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 14),
-                        child: _DayPlanCard(
-                          dayNumber: index + 1,
-                          description: _cleanDayText(
-                            tripItinerary[index],
-                          ),
-                        ),
-                      ),
+                      
+Padding(
+  padding: const EdgeInsets.only(bottom: 14),
+  child: TweenAnimationBuilder<double>(
+    key: ValueKey('${tripDestination}_$index'),
+    tween: Tween<double>(begin: 0.0, end: 1.0),
+    duration: Duration(milliseconds: 900 + (index * 200)),
+    curve: Curves.easeOutCubic,
+    builder: (context, value, child) {
+      return Opacity(
+        opacity: value,
+        child: Transform.translate(
+          offset: Offset(0, 80 * (1 - value)),
+          child: child,
+        ),
+      );
+    },
+    child: _DayPlanCard(
+      dayNumber: index + 1,
+      description: _cleanDayText(tripItinerary[index]),
+    ),
+  ),
+),
+
                   const SizedBox(height: 8),
                   Container(
                     padding: const EdgeInsets.all(16),
